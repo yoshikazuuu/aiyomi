@@ -32,12 +32,14 @@ import { useState, useRef, useEffect, useCallback, ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
+import { getSearchResult } from "@/lib/amvstrm";
+import { AnimeData } from "@/lib/types";
 
 export function SearchNavbar() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<IAnimeResult[]>([]);
+  const [results, setResults] = useState<AnimeData[]>([]);
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export function SearchNavbar() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["search", query],
-    queryFn: () => getSearch(query),
+    queryFn: () => getSearchResult(query),
     staleTime: 1000 * 60,
   });
 
@@ -105,33 +107,31 @@ export function SearchNavbar() {
           {isLoading ? (
             <CommandEmpty>Loading...</CommandEmpty>
           ) : results.length > 0 ? (
-            results.map((anime, index) =>
-              results.map((anime: any, index: number) => (
-                <CommandItem
-                  onSelect={() => {
-                    runCommand(() => router.push(`/anime/${anime.id}`));
-                  }}
-                  key={index}
-                  className="text-foreground"
-                >
-                  <Image
-                    src={anime.image}
-                    alt={anime.title}
-                    width={50}
-                    height={70}
-                    className="rounded"
-                  />
-                  <div className="flex gap-2 px-5 flex-col">
-                    <span className="text-foreground font-bold text-lg">
-                      {anime.title}
-                    </span>
-                    <Badge className="text-background w-fit">
-                      {anime.releaseDate}
-                    </Badge>
-                  </div>
-                </CommandItem>
-              ))
-            )
+            results.map((anime, index) => (
+              <CommandItem
+                onSelect={() => {
+                  runCommand(() => router.push(`/anime/${anime.id}`));
+                }}
+                key={index}
+                className="text-foreground"
+              >
+                <Image
+                  src={anime.coverImage.medium}
+                  alt={anime.title.english}
+                  width={50}
+                  height={70}
+                  className="rounded"
+                />
+                <div className="flex gap-2 px-5 flex-col">
+                  <span className="text-foreground font-bold text-lg">
+                    {anime.title.english}
+                  </span>
+                  <Badge className="text-background w-fit">
+                    {anime.seasonYear}
+                  </Badge>
+                </div>
+              </CommandItem>
+            ))
           ) : (
             <CommandEmpty>
               No results found... <br />{" "}

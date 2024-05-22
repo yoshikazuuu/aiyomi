@@ -56,4 +56,34 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .tab {
+    @apply flex items-center justify-center h-12 w-52 text-xl font-medium cursor-pointer transition-colors duration-150 ease-in;
+  }
+
+  input[type="radio"]:checked + label {
+    @apply text-primary;
+  }
+
+  input[id="radio-1"]:checked ~ .glider {
+    transform: translateX(0);
+  }
+
+  input[id="radio-2"]:checked ~ .glider {
+    transform: translateX(100%);
+  }
+
+  input[id="radio-3"]:checked ~ .glider {
+    transform: translateX(200%);
+  }
+
+  .glider {
+    @apply absolute flex h-12 w-36 bg-background rounded transition-transform duration-200 ease-out;
+  }
+
+  @media (max-width: 700px) {
+    .tabs {
+      @apply transform scale-75;
+    }
+  }
 }

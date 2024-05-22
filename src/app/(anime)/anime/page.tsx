@@ -1,32 +1,17 @@
-import { ModeToggle } from "@/components/theme/theme-toggle";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { anime } from "@/lib/anime";
+import { CarouselDApiDemo } from "@/app/(anime)/anime/carousel";
+import Trending from "./trending";
+import { Tabs } from "@/app/(anime)/anime/tabs";
 
 export default async function Anime() {
-  const topAnime = await anime.fetchTopAiring();
+  // const topAnime = await getPopular();
+  // const trendingAnime = await getTrending(10);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col w-screen justify-center items-center gap-2">
-      <div className="flex items-center gap-2">
-        <Link href="/manga" prefetch>
-          <Button>Manga</Button>
-        </Link>
-        <Link href="/novel" prefetch>
-          <Button>Novel</Button>
-        </Link>
-        <ModeToggle />
-      </div>
-      <div>
-        <h1>Top Anime</h1>
-        <ul>
-          {topAnime.results.map((anime, index) => (
-            <Link key={index} href={`/anime/${anime.id}`}>
-              <li>{anime.title as string}</li>
-            </Link>
-          ))}
-        </ul>
-      </div>
+    <div className="container flex min-h-[100svh] flex-col w-screen justify-start items-center gap-2">
+      <CarouselDApiDemo>
+        <Trending />
+      </CarouselDApiDemo>
+      <Tabs />
     </div>
   );
 }
