@@ -4,6 +4,7 @@ import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import NextTopLoader from "nextjs-toploader";
+import { HomepageHeader } from "@/components/homepage-header";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -24,13 +25,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <NextTopLoader />
+        <NextTopLoader color="#ffed75" showSpinner={false} />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
+          <HomepageHeader />
           {children}
         </ThemeProvider>
       </body>
