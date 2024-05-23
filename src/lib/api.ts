@@ -6,6 +6,7 @@ import {
   AnimeEpisodes,
   AnimeInfo,
   AnimeSearchResult,
+  Result,
 } from "./types";
 import { anime } from "./anime";
 import { IAnimeResult, ISource } from "@consumet/extensions";
@@ -59,6 +60,16 @@ export async function getAnimeEpisodes(id: string) {
   try {
     const { data } = await axios.get(`${url}/episode/${id}`);
     return data as AnimeEpisodes;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    throw new Error(axiosError.message);
+  }
+}
+
+export async function getAnimeRecommendation(id: string) {
+  try {
+    const { data } = await axios.get(`${url}/recommendations/${id}`);
+    return data.results as Result[];
   } catch (error) {
     const axiosError = error as AxiosError;
     throw new Error(axiosError.message);

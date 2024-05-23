@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { HiClock, HiMiniRectangleStack } from "react-icons/hi2";
-import { getTrending } from "@/lib/amvstrm";
+import { getTrending } from "@/lib/api";
 import { CarouselItem } from "@/components/ui/carousel";
 import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

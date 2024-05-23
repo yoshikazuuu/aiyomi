@@ -80,6 +80,7 @@ export interface AnimeInfo {
   siteUrl: string;
   trailer: Trailer;
   studios: Studio[];
+  relation: AnimeInfo[];
 }
 
 interface IdProvider {

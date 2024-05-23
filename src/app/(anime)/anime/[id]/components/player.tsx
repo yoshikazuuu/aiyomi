@@ -1,20 +1,32 @@
 "use client";
-import "@vidstack/react/player/styles/base.css";
-import "@vidstack/react/player/styles/plyr/theme.css";
+import "./player-styles.css";
 
-import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import { MediaPlayer, MediaProvider, Poster } from "@vidstack/react";
 import {
   PlyrLayout,
   plyrLayoutIcons,
 } from "@vidstack/react/player/layouts/plyr";
 import { forwardRef, Ref, Suspense, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAnimeEpisodes, getEpisodeSource } from "@/lib/amvstrm";
+import { getAnimeEpisodes, getEpisodeSource } from "@/lib/api";
 import { ComboboxPopover } from "./select-episode";
 import { Episode } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
-export function Player({ id }: { id: string }) {
+import {
+  DefaultAudioLayout,
+  defaultLayoutIcons,
+  DefaultVideoLayout,
+} from "@vidstack/react/player/layouts/default";
+
+export function Player({
+  id,
+  bannerImage,
+}: {
+  id: string;
+  bannerImage: string;
+}) {
   const [selectedStatus, setSelectedStatus] = useState<Episode | null>(null);
 
   const { data: episodes, isLoading: episodesLoading } = useQuery({
@@ -70,21 +82,43 @@ export function Player({ id }: { id: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeSourceLoading]);
 
+  if (!episodeSource && !episodeSourceLoading) {
+    return <></>;
+  }
+
   return (
     <div className="flex gap-4 w-full">
       {episodeSourceLoading ? (
-        <Skeleton className="aspect-video w-full h-full rounded-xl" />
+        <Skeleton className="aspect-video mb-[0.4rem] w-full h-full rounded-xl" />
       ) : (
         <div className="flex-auto">
           <MediaPlayer
-            title="Sprite Fight"
+            title={
+              episodes?.episodes[
+                selectedStatus?.episode ? selectedStatus?.episode - 1 : 0
+              ]?.id
+            }
             src={
               episodeSource?.sources.find((src) => src.quality === "default")
                 ?.url
             }
+            aspectRatio="16/9"
+            load="eager"
+            posterLoad="eager"
+            streamType="on-demand"
+            storage="storage-key"
+            keyTarget="player"
           >
-            <MediaProvider />
-            <PlyrLayout ref={videoPlayerContainerRef} icons={plyrLayoutIcons} />
+            <MediaProvider>
+              <Poster
+                src={bannerImage}
+                className="vds-poster"
+                style={{ objectFit: "cover" }}
+              ></Poster>
+            </MediaProvider>
+            {/* <PlyrLayout ref={videoPlayerContainerRef} icons={plyrLayoutIcons} /> */}
+            <DefaultAudioLayout icons={defaultLayoutIcons} />
+            <DefaultVideoLayout icons={defaultLayoutIcons} />
           </MediaPlayer>
         </div>
       )}

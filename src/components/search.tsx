@@ -28,7 +28,7 @@ import { Badge } from "./ui/badge";
 import { useState, useRef, useEffect, useCallback, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
-import { getSearchResult } from "@/lib/amvstrm";
+import { getSearchResult } from "@/lib/api";
 import { AnimeData } from "@/lib/types";
 import Link from "next/link";
 

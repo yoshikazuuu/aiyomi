@@ -7,15 +7,23 @@ import {
 } from "@/components/ui/hover-card";
 import { Smile } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Result } from "@/lib/types";
+import { AnimeInfo, Result } from "@/lib/types";
 import Link from "next/link";
 
-export function AnimeCard({ anime }: { anime: Result }) {
-  const color = getColor(anime.averageScore);
-  const airingNotification = getAiringNotification(
-    anime.nextAiringEpisode?.airingAt,
-    anime.nextAiringEpisode?.episode
-  );
+export function AnimeCard({ anime }: { anime: Result | AnimeInfo }) {
+  let color: string = "#000000";
+  if ("averageScore" in anime) {
+    color = getColor(anime.averageScore);
+  }
+
+  let airingNotification = "";
+  if ("nextAiringEpisode" in anime) {
+    airingNotification = getAiringNotification(
+      anime.nextAiringEpisode?.airingAt,
+      anime.nextAiringEpisode?.episode
+    );
+  }
+
   const badgeColor = getContrastColor(anime.coverImage.color);
   const pastelColor = getPastelColor(anime.coverImage.color);
 
@@ -89,7 +97,18 @@ export function AnimeCard({ anime }: { anime: Result }) {
   return (
     <HoverCard closeDelay={0} openDelay={0}>
       <HoverCardTrigger asChild>
-        <Link href={`/anime/${anime.id}`} prefetch passHref>
+        <Link
+          href={
+            anime.format === "TV" ||
+            anime.format === "MOVIE" ||
+            anime.format === "OVA" ||
+            anime.format === "ONA"
+              ? `/anime/${anime.id}`
+              : `https://anilist.co/${anime.format}/${anime.id}`
+          }
+          prefetch
+          passHref
+        >
           <div className="relative flex flex-col group col rounded-xl gap-4">
             <div className="rounded aspect-[3/4.5] shadow-lg overflow-hidden">
               <Image
@@ -119,22 +138,35 @@ export function AnimeCard({ anime }: { anime: Result }) {
         className="max-w-md flex flex-col gap-4 dark:bg-accent min-w-72 shadow-lg"
       >
         <div className="flex font-medium justify-between">
-          {anime.nextAiringEpisode ? (
+          {"nextAiringEpisode" in anime ? (
             <span>{airingNotification}</span>
           ) : (
-            <span className="capitalize">{`${anime.season.toLowerCase()} ${
-              anime.seasonYear
-            }`}</span>
+            "seasonYear" in anime && (
+              <span className="capitalize">{`${anime.season.toLowerCase()} ${
+                anime.seasonYear
+              }`}</span>
+            )
           )}
           <span className="flex items-center gap-1">
             <Smile size={20} style={{ color }} />
-            {anime.averageScore}%
+            {"averageScore" in anime ? `${anime.averageScore}%` : ""}
           </span>
         </div>
 
-        <p className="font-bold text-sm text-muted-foreground">
-          {anime.format} • {anime.episodes} episode
-        </p>
+        <div className="flex flex-col gap-1">
+          <p
+            className="font-extrabold text-sm"
+            style={{
+              color: pastelColor,
+            }}
+          >
+            {anime.status}
+          </p>
+
+          <p className="font-bold text-sm text-muted-foreground">
+            {anime.format} • {anime.episodes} episode
+          </p>
+        </div>
 
         <div>
           {anime.genres.map((genre, index) => (

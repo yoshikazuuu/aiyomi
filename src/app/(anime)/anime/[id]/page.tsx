@@ -1,8 +1,4 @@
-import {
-  getAllEpisodeSource,
-  getAnimeEpisodes,
-  getAnimeInfo,
-} from "@/lib/amvstrm";
+import { getAllEpisodeSource, getAnimeEpisodes, getAnimeInfo } from "@/lib/api";
 import { anime } from "@/lib/anime";
 import Link from "next/link";
 import { Player } from "./components/player";
