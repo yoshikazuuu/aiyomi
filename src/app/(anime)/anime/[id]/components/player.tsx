@@ -12,10 +12,7 @@ export function Player({ url }: { url: string }) {
   return (
     <MediaPlayer title="Sprite Fight" src={url}>
       <MediaProvider />
-      <PlyrLayout
-        thumbnails="https://files.vidstack.io/sprite-fight/thumbnails.vtt"
-        icons={plyrLayoutIcons}
-      />
+      <PlyrLayout icons={plyrLayoutIcons} />
     </MediaPlayer>
   );
 }

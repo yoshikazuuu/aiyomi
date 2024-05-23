@@ -10,7 +10,7 @@ interface Page {
   hasNextPage: boolean;
 }
 
-interface Result {
+export interface Result {
   id: string;
   malId: number;
   status: string;
@@ -139,8 +139,10 @@ interface Episode {
   id: string;
   title: string;
   description: string;
-  number: number;
+  episode: number;
   image: string;
+  isFiller: boolean;
+  isDub: boolean;
 }
 
 export interface AnimeSearchResult {

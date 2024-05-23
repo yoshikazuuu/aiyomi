@@ -1,7 +1,8 @@
-"use client";
-import { useState } from "react";
-
-export const Tabs = ({ activeTab }: { activeTab: string }) => {
+export const Tabs = ({
+  setActiveTab,
+}: {
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   const handleTabChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setActiveTab(e.target.id);
   };
@@ -11,27 +12,40 @@ export const Tabs = ({ activeTab }: { activeTab: string }) => {
       <div className="relative flex bg-secondary shadow-md p-2 rounded-xl">
         <input
           type="radio"
-          id="radio-1"
+          id="ID_DESC"
           name="tabs"
           className="hidden"
           defaultChecked
+          onChange={handleTabChange} // Add onChange event handler
         />
         <label
-          htmlFor="radio-1"
+          htmlFor="ID_DESC"
           className="flex items-center justify-center z-20 h-12 w-36 text-base font-medium cursor-pointer transition-colors duration-150 ease-in"
         >
-          Newest
+          Trending
         </label>
-        <input type="radio" id="radio-2" name="tabs" className="hidden" />
+        <input
+          type="radio"
+          id="POPULARITY_DESC"
+          name="tabs"
+          className="hidden"
+          onChange={handleTabChange} // Add onChange event handler
+        />
         <label
-          htmlFor="radio-2"
+          htmlFor="POPULARITY_DESC"
           className="flex items-center justify-center z-20 h-12 w-36 text-base font-medium cursor-pointer transition-colors duration-150 ease-in"
         >
           Popular
         </label>
-        <input type="radio" id="radio-3" name="tabs" className="hidden" />
+        <input
+          type="radio"
+          id="SCORE_DESC"
+          name="tabs"
+          className="hidden"
+          onChange={handleTabChange} // Add onChange event handler
+        />
         <label
-          htmlFor="radio-3"
+          htmlFor="SCORE_DESC"
           className="flex items-center justify-center z-20 h-12 w-36 text-base font-medium cursor-pointer transition-colors duration-150 ease-in"
         >
           Top Rated

@@ -26,6 +26,7 @@ export default async function Trending() {
                 alt=""
                 className="min-w-screen h-full object-cover"
               />
+
               <div className="absolute z-10 w-full h-full backdrop-blur-sm bg-gradient-to-t from-background to-background/50" />
             </div>
             <div className="flex w-full mt-14 flex-col h-[400px] justify-between gap-4 items-left p-4">
@@ -33,13 +34,15 @@ export default async function Trending() {
                 Popular Anime
               </p>
               <div className="flex flex-row gap-4 w-full h-full">
-                <Image
-                  src={anime.coverImage.large || "/cover.jpg"}
-                  width={300}
-                  height={400}
-                  alt=""
-                  className="object-cover aspect-[3/4.5] rounded shadow-xl"
-                />
+                <div className="aspect-[3/4.5] w-fit overflow-hidden h-fit rounded shadow-xl">
+                  <Image
+                    src={anime.coverImage.large || "/cover.jpg"}
+                    width={300}
+                    height={400}
+                    alt=""
+                    className="object-cover hover:scale-110 h-full ease-in-out duration-200"
+                  />
+                </div>
 
                 <div className="flex flex-col w-full">
                   <p className="text-4xl tracking-tight font-extrabold text-left">

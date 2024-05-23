@@ -10,7 +10,7 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import Trending from "@/app/(anime)/anime/trending";
+import Trending from "@/app/(anime)/anime/components/trending";
 import { ReactNode, useRef } from "react";
 
 export function CarouselDApiDemo({ children }: { children: ReactNode }) {

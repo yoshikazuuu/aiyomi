@@ -23,17 +23,14 @@ import {
 import { Button } from "./ui/button";
 import { useQuery } from "@tanstack/react-query";
 
-import { ANIME, IAnimeResult } from "@consumet/extensions";
-import axios from "axios";
-import { getSearch } from "@/lib/consumet";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
 import { useState, useRef, useEffect, useCallback, ReactNode } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
 import { getSearchResult } from "@/lib/amvstrm";
 import { AnimeData } from "@/lib/types";
+import Link from "next/link";
 
 export function SearchNavbar() {
   const router = useRouter();
@@ -73,6 +70,7 @@ export function SearchNavbar() {
     command();
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetQuery = useCallback(
     debounce((value) => setQuery(value), 210),
     []
@@ -108,29 +106,32 @@ export function SearchNavbar() {
             <CommandEmpty>Loading...</CommandEmpty>
           ) : results.length > 0 ? (
             results.map((anime, index) => (
-              <CommandItem
-                onSelect={() => {
-                  runCommand(() => router.push(`/anime/${anime.id}`));
+              <Link
+                onClick={() => {
+                  runCommand(() => {});
                 }}
+                href={`/anime/${anime.id}`}
+                prefetch
                 key={index}
-                className="text-foreground"
               >
-                <Image
-                  src={anime.coverImage.medium}
-                  alt={anime.title.english}
-                  width={50}
-                  height={70}
-                  className="rounded"
-                />
-                <div className="flex gap-2 px-5 flex-col">
-                  <span className="text-foreground font-bold text-lg">
-                    {anime.title.english}
-                  </span>
-                  <Badge className="text-background w-fit">
-                    {anime.seasonYear}
-                  </Badge>
-                </div>
-              </CommandItem>
+                <CommandItem className="text-foreground cursor-pointer">
+                  <Image
+                    src={anime.coverImage.medium}
+                    alt={anime.title.userPreferred}
+                    width={50}
+                    height={70}
+                    className="rounded"
+                  />
+                  <div className="flex gap-2 px-5 flex-col">
+                    <span className="text-foreground font-bold text-lg">
+                      {anime.title.userPreferred}
+                    </span>
+                    <Badge className="text-background w-fit">
+                      {anime.seasonYear}
+                    </Badge>
+                  </div>
+                </CommandItem>
+              </Link>
             ))
           ) : (
             <CommandEmpty>

@@ -65,15 +65,15 @@
     @apply text-primary;
   }
 
-  input[id="radio-1"]:checked ~ .glider {
+  input[id="ID_DESC"]:checked ~ .glider {
     transform: translateX(0);
   }
 
-  input[id="radio-2"]:checked ~ .glider {
+  input[id="POPULARITY_DESC"]:checked ~ .glider {
     transform: translateX(100%);
   }
 
-  input[id="radio-3"]:checked ~ .glider {
+  input[id="SCORE_DESC"]:checked ~ .glider {
     transform: translateX(200%);
   }
 

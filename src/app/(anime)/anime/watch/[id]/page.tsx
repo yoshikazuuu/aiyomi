@@ -1,6 +1,6 @@
 import { anime } from "@/lib/anime";
 import ReactPlayer from "react-player";
-import { Player } from "./player";
+import { Player } from "../../[id]/components/player";
 
 export default async function AnimeWatch({
   params,
