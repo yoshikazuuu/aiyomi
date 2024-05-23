@@ -6,7 +6,7 @@ import {
 import { anime } from "@/lib/anime";
 import Link from "next/link";
 import { Player } from "./components/player";
-import { WatchAnimeWithInfo } from "./watch-anime-with-info";
+import { WatchAnimeWithInfo } from "./components/watch-anime-with-info";
 
 export default async function AnimeInfo({
   params,
