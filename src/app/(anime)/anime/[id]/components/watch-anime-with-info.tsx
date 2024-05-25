@@ -3,6 +3,7 @@ import {
   getAllEpisodeSource,
   getAnimeEpisodes,
   getAnimeInfo,
+  getAnimeInfoGogo,
   getAnimeRecommendation,
   getEpisodeSource,
 } from "@/lib/api";
@@ -44,7 +45,7 @@ export function WatchAnimeWithInfo({ id }: { id: string }) {
   return (
     <>
       <Player
-        id={id}
+        gogoId={animeInfo?.id_provider.idGogo || ""}
         bannerImage={
           animeInfo?.coverImage.extraLarge ||
           animeInfo?.coverImage.large ||

@@ -17,15 +17,16 @@ import {
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { AnimeEpisodes, Episode } from "@/lib/types";
 import { useState } from "react";
+import { IAnimeEpisode, IAnimeInfo } from "@consumet/extensions";
 
 export function ComboboxPopover({
   episodes,
-  selectedStatus,
-  setSelectedStatus,
+  selectedEpisode,
+  setselectedEpisode,
 }: {
-  episodes?: AnimeEpisodes;
-  selectedStatus: Episode | null;
-  setSelectedStatus: (episode: Episode | null) => void;
+  episodes?: IAnimeInfo;
+  selectedEpisode: IAnimeEpisode | null;
+  setselectedEpisode: (episode: IAnimeEpisode | null) => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -39,30 +40,39 @@ export function ComboboxPopover({
             aria-expanded={open}
             className="w-[200px] justify-between"
           >
-            {selectedStatus ? <>{selectedStatus.title}</> : <>Select Episode</>}
+            {selectedEpisode ? (
+              <>Episode {selectedEpisode.number}</>
+            ) : (
+              <>Select Episode</>
+            )}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0" side="bottom" align="center">
           <Command>
-            <CommandInput placeholder="Search episode" />
+            <CommandInput placeholder="Type episode number" />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>
+                <p>No results found.</p>
+                <p className="text-muted-foreground text-xs">
+                  Try typing: 1, 2, or 10
+                </p>
+              </CommandEmpty>
               <CommandGroup>
-                {episodes?.episodes.map((episode) => (
+                {episodes?.episodes?.map((episode) => (
                   <CommandItem
-                    key={episode.episode}
-                    value={episode.title}
+                    key={episode.number}
+                    value={episode.number.toString()}
                     onSelect={(value) => {
-                      setSelectedStatus(
-                        episodes?.episodes.find(
-                          (priority) => priority.title === value
+                      setselectedEpisode(
+                        episodes?.episodes?.find(
+                          (priority) => priority.number.toString() === value
                         ) || null
                       );
                       setOpen(false);
                     }}
                   >
-                    {episode.title}
+                    <a>Episode {episode.number}</a>
                   </CommandItem>
                 ))}
               </CommandGroup>

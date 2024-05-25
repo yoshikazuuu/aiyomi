@@ -8,7 +8,11 @@ import {
 } from "@vidstack/react/player/layouts/plyr";
 import { forwardRef, Ref, Suspense, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getAnimeEpisodes, getEpisodeSource } from "@/lib/api";
+import {
+  getAnimeEpisodes,
+  getAnimeInfoGogo,
+  getEpisodeSource,
+} from "@/lib/api";
 import { ComboboxPopover } from "./select-episode";
 import { Episode } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,36 +23,37 @@ import {
   defaultLayoutIcons,
   DefaultVideoLayout,
 } from "@vidstack/react/player/layouts/default";
+import { IAnimeEpisode } from "@consumet/extensions";
 
 export function Player({
-  id,
+  gogoId,
   bannerImage,
 }: {
-  id: string;
+  gogoId: string;
   bannerImage: string;
 }) {
-  const [selectedStatus, setSelectedStatus] = useState<Episode | null>(null);
+  const [selectedEpisode, setselectedEpisode] = useState<IAnimeEpisode | null>({
+    id: "",
+    number: 1,
+  });
 
-  const { data: episodes, isLoading: episodesLoading } = useQuery({
-    queryKey: ["episodes", id],
-    queryFn: () => getAnimeEpisodes(id),
+  const { data: gogoInfo, isLoading: gogoInfoLoading } = useQuery({
+    queryKey: ["gogoInfo", gogoId],
+    queryFn: () => getAnimeInfoGogo(gogoId),
     staleTime: 1000 * 60,
   });
 
+  const selectedEpisodeNumber = selectedEpisode?.number
+    ? selectedEpisode?.number - 1
+    : 0;
+  const selectedEpisodeId =
+    gogoInfo?.episodes?.[selectedEpisodeNumber]?.id ?? "";
+
   const { data: episodeSource, isLoading: episodeSourceLoading } = useQuery({
-    queryKey: [
-      "episodeSource",
-      episodes?.episodes[
-        selectedStatus?.episode ? selectedStatus?.episode - 1 : 0
-      ]?.id,
-    ],
-    queryFn: () =>
-      getEpisodeSource(
-        episodes?.episodes[
-          selectedStatus?.episode ? selectedStatus?.episode - 1 : 0
-        ]?.id || ""
-      ),
+    queryKey: ["episodeSource", selectedEpisodeId],
+    queryFn: () => getEpisodeSource(selectedEpisodeId),
     staleTime: 1000 * 60,
+    enabled: !!gogoInfo && !!gogoInfo.episodes?.[0]?.id,
   });
 
   const videoPlayerContainerRef = useRef<HTMLDivElement>(null);
@@ -77,27 +82,23 @@ export function Player({
     if (rescale) {
       setTimeout(() => {
         setRescale(false);
-      }, 100);
+      }, 500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeSourceLoading]);
 
-  if (!episodeSource && !episodeSourceLoading) {
-    return <></>;
-  }
+  // if (!episodeSource && !episodeSourceLoading) {
+  //   return <></>;
+  // }
 
   return (
     <div className="flex gap-4 w-full">
-      {episodeSourceLoading ? (
+      {gogoInfoLoading ? (
         <Skeleton className="aspect-video mb-[0.4rem] w-full h-full rounded-xl" />
       ) : (
-        <div className="flex-auto">
+        <div className="h-fit w-full" ref={videoPlayerContainerRef}>
           <MediaPlayer
-            title={
-              episodes?.episodes[
-                selectedStatus?.episode ? selectedStatus?.episode - 1 : 0
-              ]?.id
-            }
+            title={selectedEpisodeId}
             src={
               episodeSource?.sources.find((src) => src.quality === "default")
                 ?.url
@@ -116,7 +117,6 @@ export function Player({
                 style={{ objectFit: "cover" }}
               ></Poster>
             </MediaProvider>
-            {/* <PlyrLayout ref={videoPlayerContainerRef} icons={plyrLayoutIcons} /> */}
             <DefaultAudioLayout icons={defaultLayoutIcons} />
             <DefaultVideoLayout icons={defaultLayoutIcons} />
           </MediaPlayer>
@@ -128,9 +128,9 @@ export function Player({
         style={{ maxHeight: maxEpisodeListHeight }}
       >
         <ComboboxPopover
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          episodes={episodes}
+          selectedEpisode={selectedEpisode}
+          setselectedEpisode={setselectedEpisode}
+          episodes={gogoInfo}
         />
         <div className="max-w-[200px] space-y-2 grow overflow-hidden border rounded p-4">
           <p className="text-xs text-muted-foreground font-bold">
@@ -139,19 +139,19 @@ export function Player({
 
           <div className="h-full overflow-scroll">
             <ul className="overflow-scroll">
-              {episodes?.episodes.map((episode, index) => (
+              {gogoInfo?.episodes?.map((episode, index) => (
                 <li
                   className="hover:bg-secondary px-3 py-1 cursor-pointer text-muted-foreground"
                   key={index}
                   onClick={() =>
-                    setSelectedStatus(
-                      episodes?.episodes.find(
-                        (priority) => priority.title === episode.title
+                    setselectedEpisode(
+                      gogoInfo?.episodes?.find(
+                        (priority) => priority.number === episode.number
                       ) || null
                     )
                   }
                 >
-                  <a>{episode.title}</a>
+                  <a>Episode {episode.number}</a>
                 </li>
               ))}
             </ul>

@@ -8,8 +8,8 @@ import {
   AnimeSearchResult,
   Result,
 } from "./types";
-import { anime } from "./anime";
-import { IAnimeResult, ISource } from "@consumet/extensions";
+
+import { IAnimeInfo, IAnimeResult, ISource } from "@consumet/extensions";
 
 export async function getPopular(limit: number = 20) {
   try {
@@ -82,6 +82,18 @@ export async function getEpisodeSource(id: string) {
       `${url_consumet}/anime/gogoanime/watch/${id}`
     );
     return data as ISource;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    throw new Error(axiosError.message);
+  }
+}
+
+export async function getAnimeInfoGogo(idGogo: string) {
+  try {
+    const { data } = await axios.get(
+      `${url_consumet}/anime/gogoanime/info/${idGogo}`
+    );
+    return data as IAnimeInfo;
   } catch (error) {
     const axiosError = error as AxiosError;
     throw new Error(axiosError.message);
