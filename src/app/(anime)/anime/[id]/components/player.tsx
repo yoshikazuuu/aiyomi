@@ -87,10 +87,6 @@ export function Player({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeSourceLoading]);
 
-  // if (!episodeSource && !episodeSourceLoading) {
-  //   return <></>;
-  // }
-
   return (
     <div className="flex gap-4 w-full">
       {gogoInfoLoading ? (
@@ -124,7 +120,7 @@ export function Player({
       )}
 
       <div
-        className="flex flex-col max-w-[630px] max-h-[630px]  gap-4"
+        className="flex flex-col max-w-[630px] pb-[0.4rem] max-h-[630px]  gap-4"
         style={{ maxHeight: maxEpisodeListHeight }}
       >
         <ComboboxPopover

@@ -54,7 +54,7 @@ export function WatchAnimeWithInfo({ id }: { id: string }) {
         }
       />
 
-      <div className="relative w-full border rounded p-10">
+      <div className="relative w-full border rounded overflow-hidden">
         {animeInfoLoading ? (
           <div className="flex w-full h-full justify-center items-center">
             <ImSpinner2
@@ -119,19 +119,19 @@ function RelatedAnime({
 function AnimeDetails({ animeInfo: anime }: { animeInfo: AnimeInfo }) {
   return (
     <>
-      <div className="inset-0 absolute -z-10 w-full h-[400px] flex justify-center items-start">
-        <Image
-          src={anime.bannerImage || anime.coverImage.large || "/banner.jpg"}
-          width={1920}
-          height={1080}
-          alt=""
-          className="min-w-screen h-full object-cover"
-        />
+      <div className="relative flex w-full flex-col h-fit justify-start gap-4 items-left">
+        <div className="inset-0 absolute -z-10  w-full h-[400px] flex justify-center items-start">
+          <Image
+            src={anime.bannerImage || anime.coverImage.large || "/banner.jpg"}
+            width={1920}
+            height={1080}
+            alt=""
+            className="min-w-screen h-full object-cover"
+          />
 
-        <div className="absolute z-10 w-full h-full backdrop-blur-sm bg-gradient-to-t from-background to-background/50" />
-      </div>
-      <div className="flex w-full flex-col h-fit justify-start gap-4 items-left">
-        <div className="flex flex-row gap-4 w-full h-full">
+          <div className="absolute z-10 w-full h-full backdrop-blur-sm bg-gradient-to-t from-background to-background/50" />
+        </div>
+        <div className="flex p-10 flex-row gap-4 w-full h-full">
           <div className="flex gap-2 flex-col">
             <div className="aspect-[3/4.5] w-fit overflow-hidden h-fit rounded shadow-xl">
               <Image
