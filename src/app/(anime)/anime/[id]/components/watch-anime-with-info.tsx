@@ -139,7 +139,7 @@ function AnimeDetails({ animeInfo: anime }: { animeInfo: AnimeInfo }) {
                 width={300}
                 height={400}
                 alt=""
-                className="object-cover hover:scale-110 h-full ease-in-out duration-200"
+                className="object-cover shadow-xl hover:scale-110 h-full ease-in-out duration-200"
               />
             </div>
             {anime.trailer && (

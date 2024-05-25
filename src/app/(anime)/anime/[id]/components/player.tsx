@@ -24,6 +24,7 @@ import {
   DefaultVideoLayout,
 } from "@vidstack/react/player/layouts/default";
 import { IAnimeEpisode } from "@consumet/extensions";
+import { Badge } from "@/components/ui/badge";
 
 export function Player({
   gogoId,
@@ -80,19 +81,45 @@ export function Player({
       setRescale(true);
     }
     if (rescale) {
-      setTimeout(() => {
-        setRescale(false);
-      }, 500);
+      setRescale(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [episodeSourceLoading]);
 
+  if (gogoInfoLoading) {
+    return (
+      <div className="flex gap-4 w-full">
+        <Skeleton className="aspect-video mb-[0.4rem] w-full h-full rounded" />
+        <div className="flex flex-col max-w-[630px] pb-[0.4rem] max-h-[630px]  gap-4">
+          <Skeleton className="w-[200px] h-full rounded" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!gogoInfo) {
+    return (
+      <div className="flex flex-col bg-secondary/50 items-center justify-center p-10 rounded gap-4 w-full">
+        <span className="font-extrabold text-2xl">
+          Episode not Available :(
+        </span>
+        <Badge
+          variant="secondary"
+          className="font-normal"
+        >{`I guess you wanted to watch something you shouldn't be watching right now ( ͡ ° ͜ʖ ͡ °)`}</Badge>
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-4 w-full">
       {gogoInfoLoading ? (
-        <Skeleton className="aspect-video mb-[0.4rem] w-full h-full rounded-xl" />
+        <Skeleton className="aspect-video mb-[0.4rem] w-full h-full rounded" />
       ) : (
-        <div className="h-fit w-full" ref={videoPlayerContainerRef}>
+        <div
+          className="h-fit rounded overflow-hidden w-full"
+          ref={videoPlayerContainerRef}
+        >
           <MediaPlayer
             title={selectedEpisodeId}
             src={
@@ -105,6 +132,7 @@ export function Player({
             streamType="on-demand"
             storage="storage-key"
             keyTarget="player"
+            style={{ border: "0px solid #fff", overflow: "hidden" }}
           >
             <MediaProvider>
               <Poster
