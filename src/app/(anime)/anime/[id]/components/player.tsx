@@ -43,17 +43,17 @@ export function Player({
     staleTime: 1000 * 60,
   });
 
-  const selectedEpisodeNumber = selectedEpisode?.number
-    ? selectedEpisode?.number - 1
-    : 0;
-  const selectedEpisodeId =
-    gogoInfo?.episodes?.[selectedEpisodeNumber]?.id ?? "";
+  const selectedEpisodeNumber = selectedEpisode?.number ?? 0;
+  const selected = gogoInfo?.episodes?.find(
+    (episode) => episode.number === selectedEpisodeNumber
+  );
+  const selectedEpisodeId = selected?.id ?? "";
 
   const { data: episodeSource, isLoading: episodeSourceLoading } = useQuery({
     queryKey: ["episodeSource", selectedEpisodeId],
     queryFn: () => getEpisodeSource(selectedEpisodeId),
     staleTime: 1000 * 60,
-    enabled: !!gogoInfo && !!gogoInfo.episodes?.[0]?.id,
+    enabled: !!selectedEpisodeId, // Ensure this only runs when selectedEpisodeId is valid
   });
 
   const videoPlayerContainerRef = useRef<HTMLDivElement>(null);

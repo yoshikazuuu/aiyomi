@@ -104,7 +104,7 @@ export function AnimeCard({ anime }: { anime: Result | AnimeInfo }) {
             anime.format === "OVA" ||
             anime.format === "ONA"
               ? `/anime/${anime.id}`
-              : `https://anilist.co/${anime.format}/${anime.id}`
+              : `https://anilist.co/${anime.format.toLowerCase()}/${anime.id}`
           }
           prefetch
           passHref
