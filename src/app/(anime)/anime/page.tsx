@@ -2,7 +2,7 @@ import { CarouselDApiDemo } from "@/app/(anime)/anime/components/carousel";
 import Trending from "./components/trending";
 import { Tabs } from "@/app/(anime)/anime/components/tabs";
 import { Selection } from "./components/selection";
-import { getAnimeWithType, getTrending } from "@/lib/api";
+import { getAnimeWithType, getTrending } from "@/lib/anime";
 
 export default async function Anime() {
   const popularAnime = await getAnimeWithType("POPULARITY_DESC");

@@ -106,8 +106,9 @@ function NewsCard({ data }: { data: INewsFeed }) {
         </div>
 
         <CardHeader className="grid gap-1 p-4">
-          <CardTitle>{data.title}</CardTitle>
+          <CardTitle className="text-lg leading-5">{data.title}</CardTitle>
         </CardHeader>
+
         <CardContent className="flex items-center gap-2 px-4 text-muted-foreground flex-wrap">
           {data.uploadedAt}
           <div className="flex flex-wrap">

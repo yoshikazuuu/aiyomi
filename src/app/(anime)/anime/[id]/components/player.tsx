@@ -12,7 +12,7 @@ import {
   getAnimeEpisodes,
   getAnimeInfoGogo,
   getEpisodeSource,
-} from "@/lib/api";
+} from "@/lib/anime";
 import { ComboboxPopover } from "./select-episode";
 import { Episode } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -54,7 +54,7 @@ export function Player({
     queryKey: ["episodeSource", selectedEpisodeId],
     queryFn: () => getEpisodeSource(selectedEpisodeId),
     staleTime: 1000 * 60,
-    enabled: !!selectedEpisodeId, // Ensure this only runs when selectedEpisodeId is valid
+    enabled: !!selectedEpisodeId,
   });
 
   const videoPlayerContainerRef = useRef<HTMLDivElement>(null);

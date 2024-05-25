@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Tabs } from "./tabs";
 import { AnimeDefaultData, Result } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
-import { getAnimeWithType, getTrending } from "@/lib/api";
+import { getAnimeWithType, getTrending } from "@/lib/anime";
 import { AnimeCard } from "./card";
 
 interface SelectionAnime {

@@ -6,7 +6,7 @@ import {
   getAnimeInfoGogo,
   getAnimeRecommendation,
   getEpisodeSource,
-} from "@/lib/api";
+} from "@/lib/anime";
 import { AnimeEpisodes, AnimeInfo, Result } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { ReactNode, Suspense, useEffect, useRef, useState } from "react";

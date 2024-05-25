@@ -1,4 +1,8 @@
-import { getAllEpisodeSource, getAnimeEpisodes, getAnimeInfo } from "@/lib/api";
+import {
+  getAllEpisodeSource,
+  getAnimeEpisodes,
+  getAnimeInfo,
+} from "@/lib/anime";
 import Link from "next/link";
 import { Player } from "./components/player";
 import { WatchAnimeWithInfo } from "./components/watch-anime-with-info";
