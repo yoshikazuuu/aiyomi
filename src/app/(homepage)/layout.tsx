@@ -11,13 +11,15 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 
+export const revalidate = 60; // revalidate at most every minute
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head />
       <body
         className={cn(
