@@ -33,7 +33,7 @@ import { AnimeData } from "@/lib/types";
 import Link from "next/link";
 import { Keys } from "@/components/keys";
 
-export function SearchNavbar() {
+export function AnimeSearch() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");

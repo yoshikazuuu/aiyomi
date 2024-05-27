@@ -17,6 +17,7 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import Link from "next/link";
+import { ImSpinner2 } from "react-icons/im";
 
 export function MangaInfo({ id }: { id: string }) {
   const { data: mangaInfo, isLoading: mangaInfoLoading } = useQuery({
@@ -27,27 +28,16 @@ export function MangaInfo({ id }: { id: string }) {
 
   const { data: mangaChapters, isLoading: mangaChaptersLoading } = useQuery({
     queryKey: ["chapters", mangaInfo?.id],
-    queryFn: () => getChapters(mangaInfo || null),
+    queryFn: () => getChapters(mangaInfo?.id ?? ""),
     staleTime: 1000 * 60,
   });
 
-  const [cover, setCover] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (mangaInfo) {
-      mangaInfo.mainCover.resolve().then((data) => {
-        setCover(data.fileName);
-      });
-    }
-  }, [mangaInfo]);
-
-  if (mangaInfoLoading) {
-    return <>Loading....</>;
-  }
-
-  if (mangaInfoLoading) {
-    return <>Loading...</>;
-  }
+  if (mangaInfoLoading || mangaChaptersLoading)
+    return (
+      <div className="flex w-full py-20 h-full justify-center items-center">
+        <ImSpinner2 className="animate-spin text-muted-foreground" size={50} />
+      </div>
+    );
 
   return (
     <div className="flex flex-col w-full">
@@ -56,7 +46,7 @@ export function MangaInfo({ id }: { id: string }) {
           <div className="inset-0 absolute -z-10  w-full h-[400px] flex justify-center items-start">
             <Image
               src={
-                `https://uploads.mangadex.org/covers/${mangaInfo.id}/${cover}.256.jpg` ||
+                `https://uploads.mangadex.org/covers/${mangaInfo.id}/${mangaInfo.mainCoverResolved.fileName}.256.jpg` ||
                 "/cover.jpg"
               }
               width={1920}
@@ -72,7 +62,7 @@ export function MangaInfo({ id }: { id: string }) {
               <div className="aspect-[3/4.5] w-fit overflow-hidden h-fit rounded shadow-xl">
                 <Image
                   src={
-                    `https://uploads.mangadex.org/covers/${mangaInfo.id}/${cover}.512.jpg` ||
+                    `https://uploads.mangadex.org/covers/${mangaInfo.id}/${mangaInfo.mainCoverResolved.fileName}.512.jpg` ||
                     "/cover.jpg"
                   }
                   width={300}
@@ -114,23 +104,23 @@ export function MangaInfo({ id }: { id: string }) {
                 {mangaInfo.title.en}
               </p>
               <p className="text-xl mb-2 tracking-tight text-muted-foreground italic text-left">
-                {mangaInfo.altTitles.find((title) => title.jp)?.localString}
+                {mangaInfo.altTitles.find((title) => title.jp)?.en}
               </p>
               <div className="flex mb-3 flex-row gap-1 items-center">
                 {/* {mangaInfo.tags.map((genre, index) => (
                   <Badge variant="secondary" key={index} className="mr-2">
-                    {genre.name.localString()}
+                    {genre.name.en()}
                   </Badge>
                 ))} */}
               </div>
               <p className="text-md mb-10 h-fit overflow-scroll tracking-tight text-muted-foreground text-left">
-                {mangaInfo.description.localString}
+                {mangaInfo.description.en}
               </p>
 
               <p className="flex gap-2">
                 <Accent>
                   {mangaInfo.tags.map((tag, index) => (
-                    <Badge key={index}>{tag.name.localString}</Badge>
+                    <Badge key={index}>{tag.name.en}</Badge>
                   ))}
                 </Accent>
               </p>

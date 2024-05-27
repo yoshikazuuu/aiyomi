@@ -1,3 +1,5 @@
+import { Author, Chapter, Cover, Manga } from "mangadex-full-api";
+
 export interface AnimeDefaultData {
   code: number;
   message: string;
@@ -188,4 +190,13 @@ interface CoverImage {
   large: string;
   medium: string;
   color: string;
+}
+
+export interface MangaEnhanced extends Manga {
+  mainCoverResolved: Cover;
+  authorsResolved: Author[];
+}
+
+export interface ChapterEnhanced extends Chapter {
+  mangaResolved: Manga;
 }

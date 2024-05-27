@@ -27,19 +27,21 @@ import Link from "next/link";
 import { Chapter, Manga } from "mangadex-full-api";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { ChapterEnhanced } from "@/lib/types";
+import { ImSpinner2 } from "react-icons/im";
 
 export function ReadChapter({ id }: { id: string }) {
   const router = useRouter();
-  const { data, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["chapter", id],
     queryFn: () => getChapter(id),
   });
 
   const chapter = data?.chapter;
   const pages = data?.pages;
+  const manga = chapter?.mangaResolved;
   const [aspectRatios, setAspectRatios] = useState<number[]>([]);
   const [selectedChapter, setSelectedChapter] = useState(chapter || null);
-  const [manga, setManga] = useState<Manga | null>(null);
 
   const handleImageLoad = (index: number, event: any) => {
     const width = event.target.naturalWidth;
@@ -53,12 +55,7 @@ export function ReadChapter({ id }: { id: string }) {
   };
 
   useEffect(() => {
-    if (chapter) {
-      chapter.manga.resolve().then((data) => {
-        setManga(data);
-      });
-      setSelectedChapter(chapter);
-    }
+    if (chapter) setSelectedChapter(chapter);
   }, [chapter]);
 
   useEffect(() => {
@@ -69,6 +66,13 @@ export function ReadChapter({ id }: { id: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChapter]);
 
+  if (isLoading)
+    return (
+      <div className="flex w-full py-20 h-full justify-center items-center">
+        <ImSpinner2 className="animate-spin text-muted-foreground" size={50} />
+      </div>
+    );
+
   return (
     <>
       <div className="container grid grid-cols-3 h-14 gap-4 place-items-center">
@@ -78,7 +82,7 @@ export function ReadChapter({ id }: { id: string }) {
         </p>
 
         <Link href={`/manga/${manga?.id}`}>
-          <Badge>{manga?.title.localString}</Badge>
+          <Badge>{manga?.title.en}</Badge>
         </Link>
 
         <ChapterSelector
@@ -129,14 +133,14 @@ function ChapterSelector({
   selectedChapter,
   setSelectedChapter,
 }: {
-  manga: Manga | null;
-  selectedChapter: Chapter | null;
-  setSelectedChapter: (chapter: Chapter | null) => void;
+  manga: Manga | undefined;
+  selectedChapter: ChapterEnhanced | null;
+  setSelectedChapter: (chapter: ChapterEnhanced | null) => void;
 }) {
   const [open, setOpen] = useState(false);
   const { data: mangaChapters, isLoading: mangaChaptersLoading } = useQuery({
     queryKey: ["chapters", manga?.id],
-    queryFn: () => getChapters(manga || null),
+    queryFn: () => getChapters(manga?.id ?? ""),
     staleTime: 1000 * 60,
   });
 
@@ -170,12 +174,12 @@ function ChapterSelector({
                     className="flex cursor-pointer mb-2 w-full items-start hover:bg-secondary flex-col"
                     onSelect={(value) => {
                       setSelectedChapter(
-                        mangaChapters.find(
+                        (mangaChapters.find(
                           (priority) =>
                             `Chapter ${
                               priority.chapter + (priority.title ?? "")
                             }` === value
-                        ) || null
+                        ) as ChapterEnhanced) || null
                       );
                       setOpen(false);
                     }}

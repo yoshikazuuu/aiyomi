@@ -4,8 +4,8 @@ import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import NextTopLoader from "nextjs-toploader";
-
-import { ReactQueryProvider } from "@/components/ReactQueryProvider";
+import { HomepageHeader } from "../(homepage)/components/homepage-header";
+import { NovelHeader } from "./novel/components/novel-header";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head />
       <body
         className={cn(
@@ -29,17 +29,15 @@ export default function RootLayout({
         )}
       >
         <NextTopLoader color="#ffed75" showSpinner={false} />
-        <ReactQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {/* <AnimeHeader /> */}
-            {children}
-          </ThemeProvider>
-        </ReactQueryProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NovelHeader />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

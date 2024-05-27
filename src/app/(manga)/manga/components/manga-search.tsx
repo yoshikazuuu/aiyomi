@@ -29,11 +29,10 @@ import { useState, useRef, useEffect, useCallback, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
 import { getSearchResult } from "@/lib/anime";
-import { AnimeData } from "@/lib/types";
+import { AnimeData, MangaEnhanced } from "@/lib/types";
 import Link from "next/link";
 import { getSearch } from "@/lib/manga";
 import { IMangaResult } from "@consumet/extensions";
-import { type Manga } from "mangadex-full-api";
 
 export function MangaSearch() {
   const router = useRouter();
@@ -126,26 +125,9 @@ function Card({
   manga,
   setOpen,
 }: {
-  manga: Manga;
+  manga: MangaEnhanced;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const [cover, setCover] = useState<string | null>(null);
-  const [authors, setAuthors] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (manga) {
-      manga.mainCover.resolve().then((data) => {
-        setCover(data.fileName); // Set the cover image file name when promise resolves
-      });
-    }
-
-    if (manga) {
-      manga.authors[0].resolve().then((data) => {
-        setAuthors(data.name); // Set the cover image file name when promise resolves
-      });
-    }
-  }, [manga]);
-
   const runCommand = useCallback((command: () => unknown) => {
     setOpen(false);
     command();
@@ -162,7 +144,7 @@ function Card({
     >
       <CommandItem className="text-foreground cursor-pointer">
         <Image
-          src={`https://uploads.mangadex.org/covers/${manga.id}/${cover}.256.jpg`}
+          src={`https://uploads.mangadex.org/covers/${manga.id}/${manga.mainCoverResolved.fileName}.256.jpg`}
           alt={manga.title.toString()}
           width={50}
           height={70}
@@ -175,7 +157,11 @@ function Card({
               manga.altTitles.find((title) => title.jp)?.localString ||
               "alo"}
           </span>
-          <Badge className="text-background w-fit">{authors}</Badge>
+          {manga.authorsResolved.map((author) => (
+            <Badge className="text-background w-fit" key={author.id}>
+              {author.name}
+            </Badge>
+          ))}
         </div>
       </CommandItem>
     </Link>

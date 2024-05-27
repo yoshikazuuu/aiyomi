@@ -54,7 +54,7 @@ export default async function Home() {
               Manga
             </Button>
           </Link>
-          <Link href="/ln" prefetch>
+          <Link href="/novel" prefetch>
             <Button className="gap-1 flex">
               <PiBookFill />
               Light Novels
