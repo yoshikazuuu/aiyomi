@@ -20,23 +20,25 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command-notsearch";
-import { Button } from "./ui/button";
+import { Button } from "../../../../components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
-import { Badge } from "./ui/badge";
+import { Badge } from "../../../../components/ui/badge";
 import { useState, useRef, useEffect, useCallback, ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
 import { getSearchResult } from "@/lib/anime";
 import { AnimeData } from "@/lib/types";
 import Link from "next/link";
+import { getSearch } from "@/lib/manga";
+import { IMangaResult } from "@consumet/extensions";
+import { type Manga } from "mangadex-full-api";
 
-export function SearchNavbar() {
+export function MangaSearch() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<AnimeData[]>([]);
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -53,22 +55,9 @@ export function SearchNavbar() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["search", query],
-    queryFn: () => getSearchResult(query),
+    queryFn: () => getSearch(query),
     staleTime: 1000 * 60,
   });
-
-  useEffect(() => {
-    if (data && Array.isArray(data.results)) {
-      setResults(data.results);
-    } else {
-      setResults([]);
-    }
-  }, [data]);
-
-  const runCommand = useCallback((command: () => unknown) => {
-    setOpen(false);
-    command();
-  }, []);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSetQuery = useCallback(
@@ -90,7 +79,7 @@ export function SearchNavbar() {
         onClick={() => setOpen(true)}
       >
         <Search size={15} />
-        Search your favorite anime here...
+        Search your favorite manga here...
         <Keys>
           <span className="text-xs">⌘</span>K
         </Keys>
@@ -102,36 +91,11 @@ export function SearchNavbar() {
           onChangeCapture={handleInputChange}
         />
         <CommandList className="p-2 flex-1">
-          {isLoading ? (
+          {isLoading || data == null ? (
             <CommandEmpty>Loading...</CommandEmpty>
-          ) : results.length > 0 ? (
-            results.map((anime, index) => (
-              <Link
-                onClick={() => {
-                  runCommand(() => {});
-                }}
-                href={`/anime/${anime.id}`}
-                prefetch
-                key={index}
-              >
-                <CommandItem className="text-foreground cursor-pointer">
-                  <Image
-                    src={anime.coverImage.medium}
-                    alt={anime.title.userPreferred}
-                    width={50}
-                    height={70}
-                    className="rounded"
-                  />
-                  <div className="flex gap-2 px-5 flex-col">
-                    <span className="text-foreground font-bold text-lg">
-                      {anime.title.userPreferred}
-                    </span>
-                    <Badge className="text-background w-fit">
-                      {anime.seasonYear}
-                    </Badge>
-                  </div>
-                </CommandItem>
-              </Link>
+          ) : data?.length > 0 ? (
+            data?.map((manga, index: number) => (
+              <Card setOpen={setOpen} manga={manga} key={index} />
             ))
           ) : (
             <CommandEmpty>
@@ -155,5 +119,71 @@ function Keys({ children }: { children: ReactNode }) {
     <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
       {children}
     </kbd>
+  );
+}
+
+function Card({
+  manga,
+  setOpen,
+}: {
+  manga: Manga;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const [cover, setCover] = useState<string | null>(null);
+  const [authors, setAuthors] = useState<string | null>(null);
+
+  if (
+    manga &&
+    manga.mainCover &&
+    typeof manga.mainCover.resolve === "function"
+  ) {
+    manga.mainCover.resolve().then((data) => {
+      setCover(data.fileName); // Set the cover image file name when promise resolves
+    });
+  }
+
+  if (
+    manga &&
+    manga.authors[0] &&
+    typeof manga.authors[0].resolve === "function"
+  ) {
+    manga.authors[0].resolve().then((data) => {
+      setAuthors(data.name); // Set the cover image file name when promise resolves
+    });
+  }
+
+  const runCommand = useCallback((command: () => unknown) => {
+    setOpen(false);
+    command();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <Link
+      onClick={() => {
+        runCommand(() => {});
+      }}
+      href={`/manga/${manga.id}`}
+      prefetch
+    >
+      <CommandItem className="text-foreground cursor-pointer">
+        <Image
+          src={`https://uploads.mangadex.org/covers/${manga.id}/${cover}.256.jpg`}
+          alt={manga.title.toString()}
+          width={50}
+          height={70}
+          className="rounded"
+        />
+        <div className="flex gap-2 px-5 flex-col">
+          <span className="text-foreground font-bold text-lg">
+            {manga.title.en ||
+              manga.altTitles.find((title) => title.en)?.localString ||
+              manga.altTitles.find((title) => title.jp)?.localString ||
+              "alo"}
+          </span>
+          <Badge className="text-background w-fit">{authors}</Badge>
+        </div>
+      </CommandItem>
+    </Link>
   );
 }

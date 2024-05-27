@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ModeToggle } from "./theme/theme-toggle";
+import { ModeToggle } from "@/components/theme/theme-toggle";
 import { HiSparkles } from "react-icons/hi";
 
 export function HomepageHeader() {

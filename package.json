@@ -56,6 +56,7 @@
     "input-otp": "^1.2.4",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.312.0",
+    "mangadex-full-api": "6.0.0-beta.0",
     "next": "^14.2.3",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",

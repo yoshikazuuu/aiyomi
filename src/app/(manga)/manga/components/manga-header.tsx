@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ModeToggle } from "./theme/theme-toggle";
+import { ModeToggle } from "../../../../components/theme/theme-toggle";
 import { HiSparkles } from "react-icons/hi";
-import { SearchNavbar } from "./search";
+import { MangaSearch } from "./manga-search";
 
-export function AnimeHeader() {
+export function MangaHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="container flex h-14 gap-4 justify-between items-center">
@@ -11,7 +11,7 @@ export function AnimeHeader() {
           <HiSparkles />
           <span className="hidden font-bold sm:inline-block">aiyomi</span>
         </Link>
-        <SearchNavbar />
+        <MangaSearch />
         <ModeToggle />
       </div>
     </header>

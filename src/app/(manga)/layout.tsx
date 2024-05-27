@@ -4,9 +4,9 @@ import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import NextTopLoader from "nextjs-toploader";
-import { HomepageHeader } from "@/components/homepage-header";
-import { AnimeHeader } from "@/components/anime-header";
+
 import { ReactQueryProvider } from "@/components/ReactQueryProvider";
+import { MangaHeader } from "./manga/components/manga-header";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -37,7 +37,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <AnimeHeader />
+            <MangaHeader />
             {children}
           </ThemeProvider>
         </ReactQueryProvider>
