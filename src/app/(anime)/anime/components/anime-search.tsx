@@ -31,6 +31,7 @@ import debounce from "lodash.debounce";
 import { getSearchResult } from "@/lib/anime";
 import { AnimeData } from "@/lib/types";
 import Link from "next/link";
+import { Keys } from "@/components/keys";
 
 export function SearchNavbar() {
   const router = useRouter();
@@ -147,13 +148,5 @@ export function SearchNavbar() {
         </div>
       </CommandDialog>
     </>
-  );
-}
-
-function Keys({ children }: { children: ReactNode }) {
-  return (
-    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-      {children}
-    </kbd>
   );
 }

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { getChapters, getInfo } from "@/lib/manga";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { ReactNode, useEffect, useState } from "react"; // Import useEffect and useState hooks
+import { ReactNode, use, useEffect, useState } from "react";
 import { type Manga } from "mangadex-full-api";
 import {
   Command,
@@ -31,21 +31,18 @@ export function MangaInfo({ id }: { id: string }) {
     staleTime: 1000 * 60,
   });
 
-  const [cover, setCover] = useState<string | null>(null); // State to hold cover image file name
+  const [cover, setCover] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (mangaInfo) {
+      mangaInfo.mainCover.resolve().then((data) => {
+        setCover(data.fileName);
+      });
+    }
+  }, [mangaInfo]);
 
   if (mangaInfoLoading) {
     return <>Loading....</>;
-  }
-
-  // Check if mangaInfo exists and mainCover is a function
-  if (
-    mangaInfo &&
-    mangaInfo.mainCover &&
-    typeof mangaInfo.mainCover.resolve === "function"
-  ) {
-    mangaInfo.mainCover.resolve().then((data) => {
-      setCover(data.fileName); // Set the cover image file name when promise resolves
-    });
   }
 
   if (mangaInfoLoading) {

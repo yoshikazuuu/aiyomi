@@ -132,25 +132,19 @@ function Card({
   const [cover, setCover] = useState<string | null>(null);
   const [authors, setAuthors] = useState<string | null>(null);
 
-  if (
-    manga &&
-    manga.mainCover &&
-    typeof manga.mainCover.resolve === "function"
-  ) {
-    manga.mainCover.resolve().then((data) => {
-      setCover(data.fileName); // Set the cover image file name when promise resolves
-    });
-  }
+  useEffect(() => {
+    if (manga) {
+      manga.mainCover.resolve().then((data) => {
+        setCover(data.fileName); // Set the cover image file name when promise resolves
+      });
+    }
 
-  if (
-    manga &&
-    manga.authors[0] &&
-    typeof manga.authors[0].resolve === "function"
-  ) {
-    manga.authors[0].resolve().then((data) => {
-      setAuthors(data.name); // Set the cover image file name when promise resolves
-    });
-  }
+    if (manga) {
+      manga.authors[0].resolve().then((data) => {
+        setAuthors(data.name); // Set the cover image file name when promise resolves
+      });
+    }
+  }, [manga]);
 
   const runCommand = useCallback((command: () => unknown) => {
     setOpen(false);
