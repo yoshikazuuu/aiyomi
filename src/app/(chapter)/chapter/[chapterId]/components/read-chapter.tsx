@@ -116,7 +116,7 @@ export function ReadChapter({ id }: { id: string }) {
                   width={1920}
                   height={1080}
                   alt=""
-                  src={page}
+                  src={`/api/proxy?url=${encodeURIComponent(page)}`}
                   onLoad={(event) => handleImageLoad(index, event)}
                 />
               </div>

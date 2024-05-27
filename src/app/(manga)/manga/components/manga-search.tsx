@@ -134,6 +134,9 @@ function Card({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const imageUrl = `https://uploads.mangadex.org/covers/${manga.id}/${manga.mainCoverResolved.fileName}.256.jpg`;
+  const proxyUrl = `/api/proxy?url=${encodeURIComponent(imageUrl)}`;
+
   return (
     <Link
       onClick={() => {
@@ -144,7 +147,7 @@ function Card({
     >
       <CommandItem className="text-foreground cursor-pointer">
         <Image
-          src={`https://uploads.mangadex.org/covers/${manga.id}/${manga.mainCoverResolved.fileName}.256.jpg`}
+          src={proxyUrl}
           alt={manga.title.toString()}
           width={50}
           height={70}
@@ -157,11 +160,13 @@ function Card({
               manga.altTitles.find((title) => title.jp)?.localString ||
               "alo"}
           </span>
-          {manga.authorsResolved.map((author) => (
-            <Badge className="text-background w-fit" key={author.id}>
-              {author.name}
-            </Badge>
-          ))}
+          <div className="flex flex-wrap gap-1">
+            {manga.authorsResolved.map((author) => (
+              <Badge className="text-background w-fit" key={author.id}>
+                {author.name}
+              </Badge>
+            ))}
+          </div>
         </div>
       </CommandItem>
     </Link>

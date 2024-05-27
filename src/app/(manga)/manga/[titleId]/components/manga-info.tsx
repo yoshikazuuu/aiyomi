@@ -32,6 +32,9 @@ export function MangaInfo({ id }: { id: string }) {
     staleTime: 1000 * 60,
   });
 
+  const imageUrl = `https://uploads.mangadex.org/covers/${mangaInfo?.id}/${mangaInfo?.mainCoverResolved.fileName}.256.jpg`;
+  const proxyUrl = `/api/proxy?url=${encodeURIComponent(imageUrl)}`;
+
   if (mangaInfoLoading || mangaChaptersLoading)
     return (
       <div className="flex w-full py-20 h-full justify-center items-center">
@@ -45,10 +48,7 @@ export function MangaInfo({ id }: { id: string }) {
         <div className="relative flex w-full flex-col h-fit justify-start gap-4 rounded overflow-hidden items-left">
           <div className="inset-0 absolute -z-10  w-full h-[400px] flex justify-center items-start">
             <Image
-              src={
-                `https://uploads.mangadex.org/covers/${mangaInfo.id}/${mangaInfo.mainCoverResolved.fileName}.256.jpg` ||
-                "/cover.jpg"
-              }
+              src={proxyUrl || "/cover.jpg"}
               width={1920}
               height={1080}
               alt=""
@@ -61,42 +61,13 @@ export function MangaInfo({ id }: { id: string }) {
             <div className="flex gap-2 flex-col">
               <div className="aspect-[3/4.5] w-fit overflow-hidden h-fit rounded shadow-xl">
                 <Image
-                  src={
-                    `https://uploads.mangadex.org/covers/${mangaInfo.id}/${mangaInfo.mainCoverResolved.fileName}.512.jpg` ||
-                    "/cover.jpg"
-                  }
+                  src={proxyUrl || "/cover.jpg"}
                   width={300}
                   height={400}
                   alt=""
                   className="object-cover shadow-xl hover:scale-110 h-full ease-in-out duration-200"
                 />
               </div>
-              {/* {mangaInfo.trailer && (
-                <Link
-                  href={`https://${mangaInfo.trailer.site}.com/watch/${mangaInfo.trailer.id}`}
-                  target="_blank"
-                >
-                  <Button className="font-bold w-full text-lg">TRAILER</Button>
-                </Link>
-              )} */}
-              {/* <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href={`https://anilist.co/anime/${mangaInfo.id}`}
-                  target="_blank"
-                >
-                  <Button variant="secondary" className="w-full">
-                    <SiAnilist size={20} />
-                  </Button>
-                </Link>
-                <Link
-                  href={`https://myanimelist.net/anime/${mangaInfo.idMal}`}
-                  target="_blank"
-                >
-                  <Button variant="secondary" className="w-full">
-                    <SiMyanimelist size={40} />
-                  </Button>
-                </Link>
-              </div> */}
             </div>
 
             <div className="flex flex-col w-full">
@@ -106,13 +77,7 @@ export function MangaInfo({ id }: { id: string }) {
               <p className="text-xl mb-2 tracking-tight text-muted-foreground italic text-left">
                 {mangaInfo.altTitles.find((title) => title.jp)?.en}
               </p>
-              <div className="flex mb-3 flex-row gap-1 items-center">
-                {/* {mangaInfo.tags.map((genre, index) => (
-                  <Badge variant="secondary" key={index} className="mr-2">
-                    {genre.name.en()}
-                  </Badge>
-                ))} */}
-              </div>
+
               <p className="text-md mb-10 h-fit overflow-scroll tracking-tight text-muted-foreground text-left">
                 {mangaInfo.description.en}
               </p>
